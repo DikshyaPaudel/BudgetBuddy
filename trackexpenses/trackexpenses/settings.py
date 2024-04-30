@@ -159,6 +159,5 @@ LOGIN_URL='login'
 LOGIN_REDIRECT_URL ='add_expense'
 LOGOUT_URL='logout'
 LOGOUT_REDIRECT_URL ='login'
+#Add your own social_auth key and social_auth secret here!
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY='' 
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=''
