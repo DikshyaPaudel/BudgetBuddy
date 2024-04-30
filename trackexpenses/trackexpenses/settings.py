@@ -142,7 +142,7 @@ MESSAGE_TAGS={
 }
 
 
-EMAIL_HOST_PASSWORD = 'vshf fzsj arvr fdnb'
+EMAIL_HOST_PASSWORD = '#####'
 EMAIL_HOST_USER='dikshyapaudel9@gmail.com'
 DEFAULT_FROM_EMAIL='dikshyapaudel9@gmail.com'
 EMAIL_HOST='smtp.gmail.com'
