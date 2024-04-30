@@ -1,0 +1,135 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<div class="container mt-3">
+  <div class="row m-1">
+    <div class="col-md-8">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="">Expenses</a></li>
+          <li class="breadcrumb-item active" aria-current="page">
+            My expenses
+          </li>
+        </ol>
+      </nav>
+    </div>
+    <div class="col-md-2">
+      <a href="{% url 'add_expense'%}" class="btn btn-primary p-2"
+        >Add expense</a
+      >
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        <form action="search_expenses.html" method="POST">
+          <input
+            type="text"
+            class="form-control bg-secondary p-2 mb-2"
+            id="searchField"
+            placeholder="Search"
+          />
+        </form>
+      </div>
+    </div>
+    {% include 'authentication/messages.html' %}
+  </div>
+  <div class="app-table">
+    <div class="container pt-3">
+      <table class="table table-bordered border-black table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Category</th>
+            <th scope="col">Description</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for expense in page_obj %}
+          <tr>
+            <td>{{expense.date}}</td>
+            <td>{{expense.amount}}</td>
+            <td>{{expense.category}}</td>
+            <td>{{expense.description}}</td>
+            <td>
+              <a
+                href="{% url 'edit_expense' expense.id %}"
+                class="btn btn-secondary btn-sm"
+              >
+                Edit</a
+              >
+            </td>
+            <td>
+              <a
+                href="{% url 'delete_expense' expense.id %}"
+                class="btn btn-danger btn-sm"
+              >
+                Delete</a
+              >
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="table-output">
+    <table class="table table-bordered border-black table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Category</th>
+          <th scope="col">Description</th>
+        </tr>
+      </thead>
+      <tbody class="table-body"></tbody>
+    </table>
+  </div>
+  <div class="pagination-container w-50">
+    <div class="">
+      <nav aria-label="Page navigation example">
+        Showing page {{page_obj.number}} of {{totalpage}}
+        <ul class="pagination justify-content-center w-25">
+          {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="?page={{page_obj.previous_page_number}}"
+              aria-label="Previous"
+            >
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          {% endif %} {% for n in totalpageList %}
+          <li class="page-item active">
+            <a class="page-link" href="?page={{n}}">{{n}}</a>
+          </li>
+          {% endfor %} {% if page_obj.has_next %}
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="?page={{page_obj.next_page_number}}"
+              aria-label="Next"
+            >
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <canvas id="myChartExpenseAll"></canvas>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+</div>
+<script src="{% static 'js/stats.js' %}"></script>
+<script src="{% static 'js/searchExpenses.js' %}"></script>
+{% endblock %}

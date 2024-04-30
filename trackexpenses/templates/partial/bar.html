@@ -1,0 +1,59 @@
+{% load static %}
+<div
+  class="sidebar border-right col-md-3 col-lg-2 px-2 bg-primary bg-body-tertiary mh-100 w-auto"
+>
+  <div
+    class="offcanvas-md offcanvas-end bg-body-tertiary text-black px-4"
+    tabindex="-1"
+    id="sidebarMenu"
+    aria-labelledby="sidebarMenuLabel"
+  >
+    <div
+      class="offcanvas-body bg-success d-md-flex flex-column py-5 pt-lg-3 overflow-y-auto"
+    >
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a
+            class="nav-link d-flex align-items-center gap-2 text-( r: 152, g: 255, b: 152) py-3"
+            aria-current="page"
+            href="{% url 'stats'%}"
+          >
+            Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link d-flex align-items-center gap-2 pt-3 pb-3 mt-2 text-( r: 152, g: 255, b: 152)"
+            href="{% url 'expenses' %}"
+          >
+            Expenses
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link d-flex align-items-center gap-2 pt-3 pb-3 mt-2 text-( r: 152, g: 255, b: 152)"
+            href="{% url 'income' %}"
+          >
+            Income
+          </a>
+        </li>
+      </ul>
+
+      <hr class="my-3 color-black" />
+
+      <ul class="nav flex-column mb-auto">
+        <li class="nav-item">
+          <form action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+
+            <input
+              class="sidebar nav-link text-( r: 152, g: 255, b: 152)"
+              type="submit"
+              value="Sign out"
+            />
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

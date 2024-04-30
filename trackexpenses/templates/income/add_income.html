@@ -1,0 +1,62 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container m-4 px-5">
+  <nav aria-label="breadcrumb ">
+    <ol class="breadcrumb w-50">
+      <li class="breadcrumb-item">
+        <a href="{% url 'income' %}">Income</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Add income</li>
+    </ol>
+  </nav>
+
+  <form action="{% url 'add_income' %}" class="w-50" method="post">
+    {% csrf_token %} {% include 'authentication/messages.html/' %}
+    <div class="mb-3">
+      <label for="amount" class="form-label">Amount</label>
+      <input
+        type="text"
+        class="form-control"
+        id="amount"
+        name="amount"
+        value="{{values.amount}}"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <input type="text"
+        class="form-control"
+        id="description"
+        name="description"
+        value="{{values.description}}"
+        rows="2"
+      ></input>
+    </div>
+    <div class="row">
+     <div class="col-md-6 mb-2">
+       <label for="source" class="form-label">Source</label>
+       <select
+         class="form-select form-select-md mb-3"
+         aria-label=".form-select-lg example"
+         name="source"
+       >
+         <option value="{{values.source}}">Choose a source</option>
+         {% for source in sources %}
+         <option name="source" value="{{source.name}}">
+           {{source.name}}
+         </option>
+         {% endfor %}
+       </select> 
+     </div>
+     <div class="col-md-6 mb-2">
+       <label for="date" class="form-label">Date</label>
+       <input type="date" class="form-control" value="{{values.date |date:'Y-m-d' }}" name="dateOfIncome" />
+     </div>
+   </div>
+
+    <div class="mb-3">
+      <input type="submit" value="Submit" class="btn btn-primary" />
+    </div>
+  </form>
+</div>
+
+{% endblock %}
