@@ -142,7 +142,7 @@ MESSAGE_TAGS={
 }
 
 
-EMAIL_HOST_PASSWORD = '#####'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_HOST_USER='dikshyapaudel9@gmail.com'
 DEFAULT_FROM_EMAIL='dikshyapaudel9@gmail.com'
 EMAIL_HOST='smtp.gmail.com'
@@ -160,5 +160,5 @@ LOGIN_REDIRECT_URL ='add_expense'
 LOGOUT_URL='logout'
 LOGOUT_REDIRECT_URL ='login'
 
-
-#Use your socialauthgoogle key and screte here for authentication through google 
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY='' 
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=''
