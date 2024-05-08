@@ -34,17 +34,25 @@
     <div class="row">
       <div class="col-md-6 mb-2">
         <label for="category" class="form-label">Category</label>
-        <select
+        <input
+        type="text"
+        class="form-control"
+        placeholder="eg: Health or Groceries etc"
+        id="category"
+        name="category"
+        value="{{values.category}}"
+      />
+        <!-- <select
           class="form-select form-select-md mb-3"
           aria-label=".form-select-lg example"
           name="category"
-        >
-          <option value="">Choose a category</option>
+        > -->
+          <!-- <option value="">Choose a category</option>
           {% for category in categories %}
           <option name="category" value="{{category.name}}">
             {{category.name}}
           </option>
-          {% endfor %}
+          {% endfor %} -->
         </select> 
       </div>
       <div class="col-md-6 mb-2">

@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  web:
+    build:
+      context: .
+    command: >
+      sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    environment:
+      POSTGRES_PASSWORD: BSCCSIT-77bmc@
+      DB_HOST: db
+    links:
+      - db:db
+
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: BSCCSIT-77bmc@
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: trackexpensesdb
+
+volumes:
+  postgres_data:

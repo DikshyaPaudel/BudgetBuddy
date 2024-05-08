@@ -7,7 +7,7 @@ class Income(models.Model):
  date=models.DateField(default=now)
  description = models.TextField()
  owner=models.ForeignKey(to=User, on_delete=models.CASCADE)
- source=models.CharField(max_length=400)
+ source=models.CharField(max_length=400, blank=True, null=True, default=None)
 
  def __str__(self):
   return self.source
@@ -17,6 +17,10 @@ class Income(models.Model):
  
 class Source(models.Model):
    name=models.CharField(max_length=400)
+
+   def save(self, *args, **kwargs):
+        self.name = self.name.upper()  
+        super().save(*args, **kwargs)
  
    def __str__(self):
      return self.name

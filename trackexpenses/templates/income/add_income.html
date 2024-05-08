@@ -34,7 +34,15 @@
     <div class="row">
      <div class="col-md-6 mb-2">
        <label for="source" class="form-label">Source</label>
-       <select
+       <input
+         type="text"
+         class="form-control"
+         id="source"
+         name="source"
+         placeholder="eg:Salary or SideJob etc"
+         value="{{values.source}}"
+      />
+       <!-- <select
          class="form-select form-select-md mb-3"
          aria-label=".form-select-lg example"
          name="source"
@@ -45,7 +53,7 @@
            {{source.name}}
          </option>
          {% endfor %}
-       </select> 
+       </select>  -->
      </div>
      <div class="col-md-6 mb-2">
        <label for="date" class="form-label">Date</label>

@@ -41,7 +41,7 @@ def add_income(request):
   amount=request.POST['amount']
   description=request.POST['description']  
   date=request.POST['dateOfIncome'] 
-  source=request.POST['source'] 
+  source=request.POST['source'].upper()
 
   if not amount :
    messages.error(request,"Amount is required")
@@ -59,6 +59,13 @@ def add_income(request):
   if not source :
     messages.error(request,"All the fields are required")
     return render(request,'income/add_income.html',context)
+  try:
+            # Check for existing source (case-insensitive)
+            source = Source.objects.get(name__iexact=source)
+  except Source.DoesNotExist:
+            # Create new source if it doesn't exist
+            source = Source.objects.create(name=source)
+
 
   Income.objects.create(owner=request.user,amount=amount,date=date,source=source,description=description) 
   expenses=Income.objects.filter(owner=request.user)
@@ -86,7 +93,7 @@ def edit_income(request,id):
   amount=request.POST['amount']
   description=request.POST['description']  
   date=request.POST['dateOfIncome'] 
-  source=request.POST['source'] 
+  source=request.POST['source'].upper()
 
   if not amount :
    messages.error(request,"Amount is required")
@@ -104,13 +111,20 @@ def edit_income(request,id):
   if not source :
     messages.error(request,"Description is required")
     return render(request,'income/edit_expense.html',context)
+  try:
+         
+            source = Source.objects.get(name__iexact=source)
+  except Source.DoesNotExist:
+            
+            source = Source.objects.create(name=source)
+  
   
 
 
   income.owner=request.user
   income.amount= amount
   income.date= date
-  income.source=source
+  income.source=source.name
   income.description=description
   income.save()
   messages.success(request,'Expense updated successfully')

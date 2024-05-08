@@ -7,7 +7,7 @@ class Expense(models.Model):
  date=models.DateField(default=now)
  description = models.TextField()
  owner=models.ForeignKey(to=User, on_delete=models.CASCADE)
- category=models.CharField(max_length=400)
+ category=models.CharField(max_length=400, blank=True, null=True, default=None)
 
  def __str__(self):
   return self.category
@@ -16,12 +16,16 @@ class Expense(models.Model):
   ordering= ['-date']
  
 class Category(models.Model):
-   name=models.CharField(max_length=400)
+  name=models.CharField(max_length=400)
 
-   class Meta:
+  def save(self, *args, **kwargs):
+        self.name = self.name.upper()  
+        super().save(*args, **kwargs)
+
+  class Meta:
      verbose_name ='Category'
      verbose_name_plural='Categories'
 
-   def __str__(self):
+  def __str__(self):
      return self.name
  

@@ -55,7 +55,7 @@ def add_expense(request):
   amount=request.POST['amount']
   description=request.POST['description']  
   date=request.POST['dateOfExpense'] 
-  category=request.POST['category'] 
+  category=request.POST['category'].lower()
 
   if not amount :
    messages.error(request,"Amount is required")
@@ -72,8 +72,13 @@ def add_expense(request):
   if not category :
     messages.error(request,"All the fields are required")
     return render(request,'add_expense.html',context)
+  try:
+            # Check for existing category (case-insensitive)
+            category = Category.objects.get(name__iexact=category)
+  except Category.DoesNotExist:
+            # Create new category if it doesn't exist
+            category = Category.objects.create(name=category)
   
-  #if the validation is done and if there isnot any error then we save the input of form in database inside Expense model
   Expense.objects.create(owner=request.user,amount=amount,date=date,category=category,description=description) #if owner is not included then it shows eror because owner is defined inside in model and we need to save data inside the owner  too
   expenses=Expense.objects.filter(owner=request.user)
   context={
@@ -102,7 +107,7 @@ def edit_expense(request,id):
   amount=request.POST['amount']
   description=request.POST['description']  
   date=request.POST['dateOfExpense'] 
-  category=request.POST['category'] 
+  category=request.POST['category'].lower()
 
   if not amount :
    messages.error(request,"Amount is required")
@@ -112,19 +117,24 @@ def edit_expense(request,id):
   if not description :
     messages.error(request,"Description is required")
     return render(request,'edit_expense.html',context)
-  if not category :
-    messages.error(request,"All the fields are required")
-    return render(request,'edit_expense.html',context)
   if not date :
     messages.error(request,"All the fields are required")
     return render(request,'edit_expense.html',context)
+  if not category :
+    messages.error(request,"All the fields are required")
+    return render(request,'edit_expense.html',context)
+  try:
+            category = Category.objects.get(name__iexact=category)
+  except Category.DoesNotExist:
+            # Create new category with uppercase name (optional)
+            category = Category.objects.create(name=category.upper())
+
   
-  #if the validation is done and if there isnot any error then we save the input of form in database inside Expense model
 
   expense.owner=request.user
   expense.amount= amount
   expense.date= date
-  expense.category=category
+  expense.category=category.name
   expense.description=description
   expense.save()
   messages.success(request,'Expense updated successfully')
