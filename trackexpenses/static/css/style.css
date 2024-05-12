@@ -11,6 +11,14 @@
     font-size: 3.5rem;
   }
 }
+.custom-btn {
+  background-color: #ad88c6; /* Set the background color to #AD88C6 */
+  color: white; /* Set the text color to white for better contrast */
+  border: none; /* Remove default border */
+  padding: 10px 20px; /* Adjust padding as needed */
+  border-radius: 5px; /* Add some rounded corners */
+  cursor: pointer; /* Indicate clickable behavior */
+}
 .showpassword {
   cursor: pointer;
   transition: all;
@@ -107,4 +115,40 @@
 
 .nav-link {
   cursor: pointer;
+}
+.social-section {
+  margin-top: 24px;
+  display: block;
+}
+.social-btn {
+  position: relative;
+  width: 320px;
+  border: 1px solid #c2c8d0;
+  border-radius: 6px;
+  font-size: 16px;
+  align-items: center;
+  background-color: #fff;
+  height: 52px;
+  transition: box-shadow 0.15 ease-in-out, background-color 0.15s ease-in-out;
+  cursor: pointer;
+  padding: 0 8px 0 52px;
+  color: #2d333a;
+  margin-bottom: 8px;
+  display: flex;
+  outline: 0;
+}
+.social-logo-wrapper {
+  position: absolute;
+  left: 26px;
+  top: 50%;
+  transform: translate(-50%) translateY(-50%);
+}
+.social-logo {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+}
+.social-text {
+  text-align: left;
+  position: relative;
 }

@@ -7,7 +7,7 @@ class Expense(models.Model):
  date=models.DateField(default=now)
  description = models.TextField()
  owner=models.ForeignKey(to=User, on_delete=models.CASCADE)
- category=models.CharField(max_length=400, blank=True, null=True, default=None)
+ category=models.CharField(max_length=400)
 
  def __str__(self):
   return self.category

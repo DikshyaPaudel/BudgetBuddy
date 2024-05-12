@@ -1,25 +1,50 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
 
-<!-- <div class="container mt-3">
-  <div class="row m-1">
-    <div class="col-md-8">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="">Expenses Summary</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Summary</li>
-        </ol>
-      </nav>
-    </div>
-    <div class="col-md-2">
-      <a href="" class="btn btn-primary p-2">Back</a>
+
+<div class="container mt-2 p-2">
+  <div class="row pt-3">
+    <div class="col-sm-12 mb-3 mb-sm-0">
+      <div class="card">
+        <h5 class="card-header">Quick Access</h5>
+        <div class="card-body">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-4">
+                <a href="{% url 'add_expense' %}" class="btn btn-secondary">
+                  <i
+                    class="fas fa-plus-circle fa-2x px-1"
+                    style="color: #8bbdf6"
+                  ></i>
+                  <span>New Expense</span></a
+                >
+              </div>
+              <div class="col-md-4">
+                <a href="{% url 'add_income' %}" class="btn btn-secondary">
+                  <i
+                    class="fas fa-plus-circle fa-2x px-1"
+                    style="color: #8bbdf6"
+                  ></i>
+                  <span>New Income</span>
+                </a>
+              </div>
+
+              <div class="col-md-4">
+                <a href="{% url 'add_expense' %}" class="btn btn-secondary">
+                  <i
+                    class="fa-regular fa-file-excel fa-2x px-1"
+                    style="color: #8bbdf6"
+                  ></i>
+                  <span>Upload excel</span></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div>
-    <canvas id="myChart"></canvas>
-  </div>
-</div> -->
 <div class="container">
-  <div class="mt-2">
+  <div class="mt-4">
     <h4>Overview of last 3 months</h4>
   </div>
   <div class="row pt-3">
@@ -27,10 +52,10 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Total Expenses</h5>
-          <p class="card-text" id="show-expense">
-
-          </p>
-          <a href="{% url 'expenses' %}" class="btn btn-primary">View Expenses</a>
+          <p class="card-text" id="show-expense"></p>
+          <a href="{% url 'expenses' %}" class="btn btn-primary"
+            >View Expenses</a
+          >
         </div>
       </div>
     </div>
@@ -39,26 +64,67 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Total Income</h5>
-          <p class="card-text" id="show-income">
-          </p>
+          <p class="card-text" id="show-income"></p>
           <a href="{% url 'income' %}" class="btn btn-primary">View Income</a>
         </div>
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="chartBox col-5 ">
+    <div class="chartBox col-5">
       <canvas id="myChart"></canvas>
     </div>
     <div class="col-2"></div>
-    <div class="col-5 ">
+    <div class="col-5">
       <canvas id="myChartIncome"></canvas>
     </div>
   </div>
 </div>
 
+<!-- <div class="container mt-4 p-2">
+  <div class="row pt-3">
+    <div class="col-sm-12 mb-3 mb-sm-0">
+      <div class="card">
+        <h5 class="card-header">Quick Access</h5>
+        <div class="card-body">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-4">
+                <a href="{% url 'add_expense' %}" class="btn btn-secondary">
+                  <i
+                    class="fas fa-plus-circle fa-2x px-1"
+                    style="color: #8bbdf6"
+                  ></i>
+                  <span>New Expense</span></a
+                >
+              </div>
+              <div class="col-md-4">
+                <a href="{% url 'add_income' %}" class="btn btn-secondary">
+                  <i
+                    class="fas fa-plus-circle fa-2x px-1"
+                    style="color: #8bbdf6"
+                  ></i>
+                  <span>New Income</span>
+                </a>
+              </div>
 
+              <div class="col-md-4">
+                <a href="{% url 'add_expense' %}" class="btn btn-secondary">
+                  <i
+                    class="fa-regular fa-file-excel fa-2x px-1"
+                    style="color: #8bbdf6"
+                  ></i>
+                  <span>Upload excel</span></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <script src="{% static 'js/stats.js' %}"></script>
+
+  {% endblock %}
 </div>
-<script src="{% static 'js/stats.js' %}"></script>
-
-{% endblock %}

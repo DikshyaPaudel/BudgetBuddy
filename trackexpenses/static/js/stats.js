@@ -14,12 +14,14 @@ const renderChart = (data, labels) => {
           borderColor: "#3f4242",
 
           backgroundColor: [
-            "rgba(25, 99, 132, 0.5)",
-            "rgba(255, 159, 64, 0.5)",
-            "rgba(255, 205, 86, 0.5)",
-            "rgba(75, 192, 192, 0.5)",
+            "#FF6384",
+
+            "#29526C",
+            "#FF6384",
+            "#3AB1CB",
+            "#CC671B",
             "rgba(54, 162, 235, 0.5)",
-            "rgba(153, 102, 255, 0.5)",
+            "#21839C",
             "rgba(201, 203, 207, 0.5)",
             "rgba(201, 20, 207, 0.5)",
             "rgba(101, 20, 207, 0.5)",
@@ -69,9 +71,9 @@ const renderChartIncome = (data, labels) => {
           borderWidth: 1,
           borderColor: "#3f4242",
           backgroundColor: [
-            "rgba(25, 99, 132, 0.5)",
-            "rgba(255, 159, 64, 0.5)",
-            "rgba(255, 205, 86, 0.5)",
+            "#FF6384",
+            "#3AB1CB",
+            "#CC671B",
           ],
         },
       ],

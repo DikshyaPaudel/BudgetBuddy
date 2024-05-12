@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'authentication',
     'expenseapp',
     'social_django',
-    'income'
+    'income',
+    
 ]
 
 MIDDLEWARE = [
@@ -97,7 +98,7 @@ DATABASES = {
 
         
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'BSCCSIT-77bmc@'),
-        'HOST': os.environ.get('DB_HOST', 'db'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT':5432,
     
 

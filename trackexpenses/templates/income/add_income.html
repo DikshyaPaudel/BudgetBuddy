@@ -34,26 +34,26 @@
     <div class="row">
      <div class="col-md-6 mb-2">
        <label for="source" class="form-label">Source</label>
-       <input
+       <!-- <input
          type="text"
          class="form-control"
          id="source"
          name="source"
          placeholder="eg:Salary or SideJob etc"
          value="{{values.source}}"
-      />
-       <!-- <select
+      /> -->
+       <select
          class="form-select form-select-md mb-3"
          aria-label=".form-select-lg example"
          name="source"
        >
-         <option value="{{values.source}}">Choose a source</option>
-         {% for source in sources %}
-         <option name="source" value="{{source.name}}">
-           {{source.name}}
+         <option value="">Choose a source</option>
+         {% for source_value, source_text in sources %}
+         <option name="source_text" value="{{source_value}}">
+           {{source_text}}
          </option>
          {% endfor %}
-       </select>  -->
+       </select> 
      </div>
      <div class="col-md-6 mb-2">
        <label for="date" class="form-label">Date</label>

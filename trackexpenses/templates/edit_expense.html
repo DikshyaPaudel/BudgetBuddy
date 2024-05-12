@@ -34,14 +34,14 @@
     <div class="row">
       <div class="col-md-6 mb-2">
         <label for="category" class="form-label">Category</label>
-        <input
+        <!-- <input
         type="text"
         class="form-control"
         id="category"
         name="category"
         value="{{values.category}}"
-      />
-        <!-- <select
+      /> -->
+        <select
           class="form-select form-select-md mb-3"
           aria-label=".form-select-lg example"
           name="category"
@@ -50,12 +50,19 @@
           <option selected name="category" value="{{values.category}}">
             {{values.category}}
           </option>
-          {% for category in categories %}
+          <!-- {% for category in categories %}
           <option name="category" value="{{category.name}}">
             {{category.name}}
           </option>
+          {% endfor %} -->
+          {% for category_value, category_text in categories %}
+          {% if category_value != values.category %}
+          <option name="category_text" value="{{category_value}}">
+            {{category_text}}
+          </option>
+          {% endif %}
           {% endfor %}
-        </select>  -->
+        </select> 
       </div>
       <div class="col-md-6 mb-2">
         <label for="date" class="form-label">Date</label>
