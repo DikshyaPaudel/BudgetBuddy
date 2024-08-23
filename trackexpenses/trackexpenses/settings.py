@@ -43,8 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'authentication',
+    'rest_framework',
     'expenseapp',
-    'social_django',
+    # 'social_django',
     'income',
     
 ]
@@ -57,7 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'social_django.middleware.SocialAuthExceptionMiddleware',
+    # 'social_django.middleware.SocialAuthExceptionMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'trackexpenses.urls'
@@ -73,7 +75,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
+                # 'social_django.context_processors.backends',
             ],
         },
     },
@@ -86,20 +88,28 @@ WSGI_APPLICATION = 'trackexpenses.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 
-DATABASES = {
+# DATABASES = {
  
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'trackexpensesdb',
-        'USER':'postgres',
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'trackexpensesdb',
+#         'USER':'postgres',
         
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT':5432,
+#         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
+#         'HOST': os.environ.get('DB_HOST', 'localhost'),
+#         'PORT':5432,
     
 
+#     }
+# }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -153,15 +163,15 @@ EMAIL_USE_TLS=True
 EMAIL_PORT=587
 
 #social app custom settings
-AUTHENTICATION_BACKENDS=[
- 'social_core.backends.google.GoogleOAuth2',
- 'django.contrib.auth.backends.ModelBackend',
-]
+# AUTHENTICATION_BACKENDS=[
+#  'social_core.backends.google.GoogleOAuth2',
+#  'django.contrib.auth.backends.ModelBackend',
+# ]
 
 LOGIN_URL='login'
 LOGIN_REDIRECT_URL ='add_expense'
 LOGOUT_URL='logout'
 LOGOUT_REDIRECT_URL ='login'
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY='' 
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=''
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY='' 
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=''

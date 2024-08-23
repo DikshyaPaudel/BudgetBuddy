@@ -22,5 +22,5 @@ urlpatterns = [
     path('',include('expenseapp.urls')),
     path('authentication/',include('authentication.urls')),
     path('income/',include('income.urls')),
-    path('social-auth/',include('social_django.urls', namespace='social')),
+    # path('social-auth/',include('social_django.urls', namespace='social')),
 ]
