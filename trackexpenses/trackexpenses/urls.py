@@ -19,7 +19,7 @@ from django.urls import path,include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('expenseapp.urls')),
+    path('expense/',include('expenseapp.urls')),
     path('authentication/',include('authentication.urls')),
     path('income/',include('income.urls')),
     # path('social-auth/',include('social_django.urls', namespace='social')),
