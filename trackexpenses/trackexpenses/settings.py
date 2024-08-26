@@ -96,14 +96,12 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'trackexpensesdb',
         'USER':'postgres',
-        # 'PASSWORD':'BSCCSIT-77bmc@',
-        # 'HOST':'db',
-        # 'PORT':5432,
-
         
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'BSCCSIT-77bmc@'),
         'HOST': os.environ.get('DB_HOST'),
         # 'HOST': os.environ.get('DB_HOST', 'db'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT':5432,
     
 
@@ -154,7 +152,7 @@ MESSAGE_TAGS={
 }
 
 
-EMAIL_HOST_PASSWORD = 'vshf fzsj arvr fdnb'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_HOST_USER='dikshyapaudel9@gmail.com'
 DEFAULT_FROM_EMAIL='dikshyapaudel9@gmail.com'
 EMAIL_HOST='smtp.gmail.com'
@@ -172,5 +170,5 @@ LOGIN_REDIRECT_URL ='stats'
 LOGOUT_URL='logout'
 LOGOUT_REDIRECT_URL ='login'
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY='807525073138-62pfjv4cabbahr5328sv3qeeqbqmct2p.apps.googleusercontent.com' 
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET='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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY='' 
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=''
