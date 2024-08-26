@@ -51,7 +51,6 @@ def search_expenses(request):
 #  return render(request,'index.html',context)
 
 class index(APIView):
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         expenses = Expense.objects.filter(owner=request.user)
@@ -118,7 +117,6 @@ class index(APIView):
 #   return redirect('expenses')
   # return render(request,'index.html',context)
 class add_expense(APIView):
-    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = ExpenseSerializer(data=request.data)
@@ -191,7 +189,6 @@ class add_expense(APIView):
 #   return redirect(index)
 
 class edit_expense(APIView):
-    permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
         expense = get_object_or_404(Expense, pk=id, owner=request.user)
