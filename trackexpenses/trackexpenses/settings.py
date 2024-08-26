@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
     'authentication',
     'expenseapp',
     'social_django',
@@ -57,8 +59,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'trackexpenses.urls'
 
@@ -98,7 +102,8 @@ DATABASES = {
 
         
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'BSCCSIT-77bmc@'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'HOST': os.environ.get('DB_HOST'),
+        # 'HOST': os.environ.get('DB_HOST', 'db'),
         'PORT':5432,
     
 
@@ -163,7 +168,7 @@ AUTHENTICATION_BACKENDS=[
 ]
 
 LOGIN_URL='login'
-LOGIN_REDIRECT_URL ='add_expense'
+LOGIN_REDIRECT_URL ='stats'
 LOGOUT_URL='logout'
 LOGOUT_REDIRECT_URL ='login'
 

@@ -52,6 +52,9 @@ def add_income(request):
   if not amount :
    messages.error(request,"Amount is required")
    return render(request,'income/add_income.html',context)
+  if not amount.isdigit():
+   messages.error(request, 'Amount should be a number.')
+   return render(request, 'income/add_income.html',context)
   
 
   if not description :
@@ -182,15 +185,17 @@ def expense_category_summary_all(request):
     finalrep = {}
 
     def get_expense_category_amount(category):
+           # Filter expenses by category
         filtered_by_category = expense.filter(category=category)
+          # Calculate the sum of amounts for the filtered expenses
         amount = sum(item.amount for item in filtered_by_category)
         return amount
-
+        # Create a set of unique categories from the expenses
     category_list = set(expense.values_list('category', flat=True))
-
+# Iterate through each category and calculate the total amount for each
     for category in category_list:
         finalrep[category] = get_expense_category_amount(category)
-
+ # Calculate the total sum of all expenses
     total_sum = sum(finalrep.values())
 
     combined = {

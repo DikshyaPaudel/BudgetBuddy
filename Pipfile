@@ -12,6 +12,9 @@ gunicorn = "*"
 validate-email = "*"
 six = "*"
 social-auth-app-django = "*"
+django-environ = "*"
+xlwt = "*"
+openpyxl = "*"
 
 [dev-packages]
 

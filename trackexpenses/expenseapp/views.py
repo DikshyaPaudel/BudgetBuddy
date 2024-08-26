@@ -5,13 +5,14 @@ from income.models import Income,Source
 from django.contrib import messages
 from django.core.paginator import Paginator
 import json #you  can get everything that the user is trying to search for
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 #we get data as json and convert into python dictionarty in the same way to send  data back to user in json we use http response
 # Create your views here.
 import datetime
 from django.core import serializers
 from django.db.models import Sum
-
+import openpyxl
+from openpyxl.styles import Alignment
 
 def search_expenses(request):
  if request.method=='POST':
@@ -27,7 +28,7 @@ def index(request):
  categories=  Category.objects.all()
  expenses=Expense.objects.filter(owner=request.user) #all the expenses of that particular user
  paginator=Paginator(expenses,3) #pass two parameters i.e one is the object that we want to paginate and another is number of item to be displayed in a page
- page_number=request.GET.get('page' ) #total page number 
+ page_number=request.GET.get('page' ) #get current page number 
  #GET.get
  page_obj=paginator.get_page(page_number) # which data to display in that page number  
  totalpage=page_obj.paginator.num_pages; #num_pages gives total number of pages
@@ -70,6 +71,12 @@ def add_expense(request):
   if not amount :
    messages.error(request,"Amount is required")
    return render(request,'add_expense.html',context)
+  if not amount.isdigit():
+   messages.error(request, 'Amount should be a number.')
+   return render(request, 'add_expense.html',context)
+  if not amount.isdecimal():
+    messages.error(request, 'Amount should be a number. You can include a decimal point (.) if necessary.')
+    return render(request, 'add_expense.html', context)
   
   if not description :
     messages.error(request,"Description is required")
@@ -82,12 +89,7 @@ def add_expense(request):
   if not category :
     messages.error(request,"All the fields are required")
     return render(request,'add_expense.html',context)
-  # try:
-  #           # Check for existing category (case-insensitive)
-  #           category = Category.objects.get(name__iexact=category)
-  # except Category.DoesNotExist:
-  #           # Create new category if it doesn't exist
-  #           category = Category.objects.create(name=category)
+
   
   Expense.objects.create(owner=request.user,amount=amount,date=date,category=category,description=description) #if owner is not included then it shows eror because owner is defined inside in model and we need to save data inside the owner  too
   expenses=Expense.objects.filter(owner=request.user)
@@ -144,12 +146,7 @@ def edit_expense(request,id):
   if not category :
     messages.error(request,"All the fields are required")
     return render(request,'edit_expense.html',context)
-  # try:
-  #           category = Category.objects.get(name__iexact=category)
-  # except Category.DoesNotExist:
-  #           # Create new category with uppercase name (optional)
-  #           category = Category.objects.create(name=category.upper())
-
+ 
   
 
   expense.owner=request.user
@@ -173,12 +170,14 @@ def expense_category_summary(request):
  three_months_ago=today_date-datetime.timedelta(days=30*3) 
  expense=Expense.objects.filter(owner=request.user,date__gte=three_months_ago,date__lte=today_date)
  finalrep={}
-
+   # Define a helper function to extract the category from an expense object
  def get_category(expense):
   return expense.category
-
+ 
+ # Create a list of unique categories from the expenses
  category_list=list(set(map(get_category,expense)))
 
+ # Define a helper function to calculate the total amount spent for a given category
  def get_expense_category_amount(category):
   amount=0;
   filtered_by_category=expense.filter(category=category) 
@@ -186,10 +185,11 @@ def expense_category_summary(request):
    amount+=item.amount
   return amount
 
+#iterate through each expense and itertate through each category and find total amount for each category
  for x in expense:
   for y in category_list:
-   finalrep[y]=get_expense_category_amount(y)
- total_sum=sum(finalrep.values())
+   finalrep[y]=get_expense_category_amount(y) #total sum for that particular category
+ total_sum=sum(finalrep.values()) #summ all the category i.e sum of all the expenses
  combined={'expense_category_data':finalrep,
             'total_sum':total_sum
         
@@ -227,3 +227,32 @@ def income_source_summary(request):
     }
 
     return JsonResponse(combined, safe=False)
+
+def export_excel(request):
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename=Expenses_{datetime.date.today().strftime("%Y-%m-%d")}.xlsx'
+    wb = openpyxl.Workbook()  # workbook as excelfile
+    ws = wb.active
+    ws.title = 'Expenses'
+    row_num = 1
+    columns = ['Amount', 'Description', 'Category', 'Date']
+    ws.append(columns)
+
+    expenses = Expense.objects.filter(owner=request.user).values_list('amount', 'description', 'category', 'date')
+
+    for expense in expenses:
+        ws.append(expense)
+    column_widths = [15, 30, 20, 20]
+    for i, width in enumerate(column_widths):
+        ws.column_dimensions[openpyxl.utils.get_column_letter(i + 1)].width = width
+
+    # Format the 'Date' column as date
+    date_col_idx = columns.index('Date') + 1
+    for row in ws.iter_rows(min_row=2, min_col=date_col_idx, max_col=date_col_idx):
+        for cell in row:
+            cell.number_format = 'YYYY-MM-DD'
+            cell.alignment = Alignment(horizontal='center')
+    
+
+    wb.save(response)
+    return response

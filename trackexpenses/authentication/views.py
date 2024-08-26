@@ -1,178 +1,158 @@
-from django.shortcuts import render,redirect
-from django.views import View #rewuest,response
-from django.http import JsonResponse
-from django.contrib.auth.models import User
-import json
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from django.contrib.auth.models import User
 from validate_email import validate_email
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.urls import reverse
-
-
-from django.utils.encoding import force_bytes,force_str,DjangoUnicodeDecodeError
+from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from .utils import token_generator
 from django.contrib import auth
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 import threading
+from django.views.decorators.csrf import csrf_exempt
 
 class EmailThread(threading.Thread):
-  def __init__(self, email):
-    self.email=email
-    threading.Thread.__init__(self)
+    def __init__(self, email):
+        self.email = email
+        threading.Thread.__init__(self)
 
-  def run(self):
-    self.email.send(fail_silently=False)
-
-
-
-class UsernameValidateView(View):
- def post(self,request):
-  data= json.loads(request.body)
-  username=data['username']
-  if not str(username).isalnum():
-   return JsonResponse({'username_error':'Username should  only have alphanumeic value'},status=400)
-  if User.objects.filter(username=username).exists():
-   return JsonResponse({'username_error':'This Username is already used, choose another one '},status=409)
-  return JsonResponse({'username_valid':True})
-
-  
- #For EMAIL
-
-class EmailValidateView(View):
- def post(self,request):
-  data= json.loads(request.body)
-  email=data['email']
-  if not validate_email(email):
-   return JsonResponse({'email_error':'Email is invalid '},status=400)
-  if User.objects.filter(email=email).exists():
-   return JsonResponse({'email_error':'This email is already used, choose another one '},status=409)
-  return JsonResponse({'email_valid':True})
-
-class RegistrationView(View):
- def get(self,request):
-  return render(request,'authentication/register.html')
- 
-
- #after clicking submit
- def post(self,request):
-  username = request.POST['username']
-  email = request.POST['email']
-  password = request.POST['password']
-
-  context={
-   'fieldValues': request.POST
-  }
-  if not username or not email or not password:
-   messages.error(request,"All fields are required")
-   return render(request,'authentication/register.html',context)
-
-  if not User.objects.filter(username=username).exists():
-   if not User.objects.filter(email=email).exists():
-    if len(password)<6:
-     messages.error(request,"Password is short.")
-     return render(request,'authentication/register.html',context)
-    else:
-     user=User.objects.create_user(username=username,email=email)
-     user.set_password(password)
-     user.is_active=False
-     user.save()
+    def run(self):
+        self.email.send(fail_silently=False)
 
 
+class UsernameValidateAPIView(APIView):
+    def post(self, request):
+        data = request.data
+        username = data['username']
+        if not str(username).isalnum():
+            return Response({'username_error': 'Username should only have alphanumeric characters'}, status=status.HTTP_400_BAD_REQUEST)
+        if User.objects.filter(username=username).exists():
+            return Response({'username_error': 'This Username is already used, choose another one'}, status=status.HTTP_409_CONFLICT)
+        return Response({'username_valid': True})
 
-     # uidb64 = force_bytes(urlsafe_base64_encode(user.pk))
-     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
 
-     domain = get_current_site(request).domain
-     link=reverse('activate',kwargs={'uidb64':uidb64,'token':token_generator.make_token(user)})
-     email_subject='Activate your account'
+class EmailValidateAPIView(APIView):
+    def post(self, request):
+        data = request.data
+        email = data['email']
+        if not validate_email(email):
+            return Response({'email_error': 'Email is invalid'}, status=status.HTTP_400_BAD_REQUEST)
+        if User.objects.filter(email=email).exists():
+            return Response({'email_error': 'This email is already used, choose another one'}, status=status.HTTP_409_CONFLICT)
+        return Response({'email_valid': True})
 
-     acivate_url = 'http://'+domain+link
-     email_body='Hi'+ user.username + 'Please use this link for verification of your account\n'+ acivate_url
-     email = EmailMessage(
-     email_subject,
-     email_body,
-    'dikshyapaudel9@gmail.com', #from the emaiik
-    # from_email=settings.EMAIL_HOST_USER
-    
-     [email], #where you are sending email, so this is receipt who already have email when they are sending form 
-  
-)
-     EmailThread(email).start()
-     messages.success(request,"Account successfully created")
-     return redirect('login')
-   
 
-  return render(request,'authentication/register.html')
- 
+class RegistrationAPIView(APIView):
+    def post(self, request):
+        first_name = request.data.get('first_name')
+        last_name = request.data.get('last_name')
+        username = request.data.get('username')
+        email = request.data.get('email')
+        password = request.data.get('password')
+        confirm_password=request.data.get('confirm_password')
+        
 
-#   return redirect('login')
-class VerificationView(View):
-  def get(self, request, uidb64, token):
-    try:
-      id = force_str(urlsafe_base64_decode(uidb64))
-      user = User.objects.get(pk=id)
-      
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
-        user = None
-        messages.error(request, 'Error verifying account activation: {}'.format(str(e)))
-        return redirect('login')
-   
-    if user is not None and token_generator.check_token(user, token):
-        user.is_active = True 
+        if not first_name or not last_name or  not username or not email or not password or not confirm_password:
+            return Response({'error': 'All fields are requirored'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if password !=confirm_password:
+            return Response({'error': 'Passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if User.objects.filter(username=username).exists():
+            return Response({'error': 'Username already exists'}, status=status.HTTP_409_CONFLICT)
+        
+        if User.objects.filter(email=email).exists():
+            return Response({'error': 'Email already exists'}, status=status.HTTP_409_CONFLICT)
+
+        if len(password) < 6:
+            return Response({'error': 'Password is too short'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.create_user(username=username, email=email,password=password)
+        user.first_name=first_name
+        user.last_name=last_name
+        user.set_password(password)
+        user.is_active = False
         user.save()
 
-        messages.success(request, 'Account activated successfully')
-        return redirect('login')
-     
-    elif not token_generator.check_token(user, token):
+        #Generate email verifica
+
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+        domain = get_current_site(request).domain
+        link = reverse('activate', kwargs={'uidb64': uidb64, 'token': token_generator.make_token(user)})
+        activate_url = f'http://{domain}{link}'
+
+        email_subject = 'Activate your account'
+        email_body = f'Hi {user.username}, please use this link to verify your account: {activate_url}'
+
+        email = EmailMessage(
+            email_subject,
+            email_body,
+            'your-email@example.com',
+            [email],
+        )
+        EmailThread(email).start()
+
+        return Response({'success': 'Account successfully created, check your email for activation'}, status=status.HTTP_201_CREATED)
+
+
+class VerificationAPIView(APIView):
+    def get(self, request, uidb64, token):
+        try:
+            user_id = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=user_id)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return Response({'error': 'Invalid activation link'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if user.is_active:
+            return Response({'warning': 'User already activated'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+            return Response({'success': 'Account activated successfully'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Activation link is invalid'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginAPIView(APIView):
+    def post(self, request):
+        # username = request.data.get('username')
+        # password = request.data.get('password')
+        email = request.data.get('email')
+        password = request.data.get('password')
+        print(f"Email: {email}, Password: {password}")
+
+
+        if not email or not password:
+            return Response({'error': 'Both fields are required'}, status=status.HTTP_400_BAD_REQUEST)
         
-        messages.warning(request,'User already activated')
-        return redirect('login')
-     
-    elif user.is_active:
-        messages.warning(request,'User already activated')
-        return redirect('login')
+        try:
+            user = User.objects.get(email=email)
+            print(f"User found: {user.username}") 
+        except User.DoesNotExist:
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
-    else:
-        messages.error(request, 'Activation link is invalid!')
-        return redirect('login')
-    
+        # Authenticate using email and password
+        user = authenticate(username=user.username, password=password)
 
+        # user = auth.authenticate(username=username, password=password)
 
- 
-class LoginView(View):
- def get(self,request):
-  return render(request, 'authentication/login.html')
- def post(self, request):
-  username=request.POST['username'];
-  password=request.POST['password'];
-
-  if username and password:
-    user= auth.authenticate(username=username, password=password)
-
-    if user:
-      if user.is_active:
-        auth.login(request, user)
-        messages.success(request,"Welcome, "+user.username+" You are loggged in !")
-        return redirect('expenses')
-    
-
-      messages.error(request,"Account is not activated, please check your email")  
-      return render(request,'authentication/login.html')
-    
-    messages.error(request,"Invalid credentials")  
-    return render(request,'authentication/login.html')
-  
-  messages.error(request,"")  
-  return render(request,'authentication/login.html')
+        if user:
+            if user.is_active:
+                # auth.login(request, user)
+                login(request,user)
+                return Response({'success': f'Welcome. You are logged in!'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Account is not activated, please check your email'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LogoutView(View):
-  def post(self,request):
-    auth.logout(request)
-    messages.success(request,'You have been logged out')
-    return redirect('login')
+class LogoutAPIView(APIView):
+    def post(self, request):
+        auth.logout(request)
+        return Response({'success': 'You have been logged out'}, status=status.HTTP_200_OK)

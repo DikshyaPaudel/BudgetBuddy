@@ -2800,7 +2800,7 @@ textarea.form-control.is-valid {
   width: 100%;
   margin-top: 0.25rem;
   font-size: 0.875em;
-  color: var(--bs-form-invalid-color);
+  color: red;
 }
 .invalid-tooltip {
   position: absolute;
@@ -8626,7 +8626,7 @@ fieldset:disabled .btn {
   background-color: rgba(var(--bs-white-rgb), var(--bs-bg-opacity)) !important;
 }
 .bg-body {
-  --bs-bg-opacity: 1;
+  --bs-bg-opacity: 0.3;
   background-color: rgba(
     var(--bs-body-bg-rgb),
     var(--bs-bg-opacity)

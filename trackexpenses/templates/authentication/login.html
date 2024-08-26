@@ -1,10 +1,23 @@
 {% extends 'base_authh.html' %}
 {% load static %} 
 {% block content %}
+<style>
+  body{
+    margin: 0;
+    padding: 0;
+  }
+  .backgroundimages{
+            background-image: url("/static/img/back.jpg");  background-size: cover;
+            background-position: center;
+            height: 100vh;  display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+</style>
 <div class="backgroundimages">
   <div class="row container-fluid">
     <div class="col-md-4"></div>
-    <div class="col-md-3 h-100 m-5 w-70 p-4 ">
+    <div class="col-md-3 h-100 m-5 w-70 p-4">
       <div class="card d-grid gap-3  p-3 mb-5 bg-body">
         
         <div class="card-body ">
